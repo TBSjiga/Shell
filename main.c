@@ -6,6 +6,7 @@
 #include <dirent.h>
 #include <sys/stat.h>
 
+/* Function Declarations for shell commands */
 int lsh_cd(char **args);
 int lsh_help(char **args);
 int lsh_ls(char **args);
@@ -15,6 +16,7 @@ int lsh_delete(char **args);
 int remove_directory(const char *path);
 int mkdir(const char *path, mode_t mode);
 
+/* List of commands */
 char *builtin_str[] = 
 {
   "cd",
@@ -34,13 +36,13 @@ int (*builtin_func[]) (char **) =
   &lsh_create,
   &lsh_delete,
   &lsh_exit
-
 };
 
 int num_builtins() {
   return sizeof(builtin_str) / sizeof(char *);
 }
 
+/* Go to directory */
 int lsh_cd(char **args)
 {
   if (args[1] == NULL) 
@@ -57,7 +59,7 @@ int lsh_cd(char **args)
   return 1;
 }
 
-
+/* HELP PLS */
 int lsh_help(char **args)
 {
   int i;
@@ -72,11 +74,13 @@ int lsh_help(char **args)
   return 1;
 }
 
+/* GO AWAY */
 int lsh_exit(char **args)
 {
   return 0;
 }
 
+/* ls */
 int lsh_ls(char **args)
 {
   DIR *dir = opendir(".");
@@ -96,6 +100,7 @@ int lsh_ls(char **args)
     return 1;  
 }
 
+/* Create directory */
 int lsh_create(char **args) 
 { 
   
@@ -111,7 +116,7 @@ int lsh_create(char **args)
   return 1; 
 }
 
-
+/* Delete directory */
 int lsh_delete (char **args)
 {
   remove_directory(args[1]);
@@ -171,6 +176,7 @@ int remove_directory(const char *path)
    return r;
 }
 
+/* launch shell */
 int lsh_launch(char **args)
 {
   pid_t pid, wpid;
@@ -193,6 +199,7 @@ int lsh_launch(char **args)
   return 1;
 }
 
+/* Check is the command builtin or no */
 int lsh_execute(char **args)
 {
   int i;
@@ -212,6 +219,7 @@ int lsh_execute(char **args)
   return lsh_launch(args);
 }
 
+/* Read a line of input */
 #define RL_BUFSIZE 1024
 char *read_line(void)
 {
@@ -251,6 +259,7 @@ char *read_line(void)
   }
 }
 
+/* Split a line into tokens */
 #define TOK_BUFSIZE 64
 #define TOK_DELIM " \t\r\n\a"
 char **split_line(char *line)
@@ -307,6 +316,7 @@ void lsh_loop(void)
   } while (status);
 }
 
+/* Loop getting input and executing it */
 int main(int argc, char **argv)
 {
   printf("It's shell! To find out what it does, write ''help'' without quotes!\n");
